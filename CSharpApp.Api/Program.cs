@@ -43,7 +43,7 @@ versionedEndpointRouteBuilder.MapGet("api/v{version:apiVersion}/products/{id}", 
 .WithName("GetProductById")
 .HasApiVersion(1.0);
 
-versionedEndpointRouteBuilder.MapPost("api/v{version:apiVersion}/products", async (Product productDto, IProductsService productsService) =>
+versionedEndpointRouteBuilder.MapPost("api/v{version:apiVersion}/products", async (CreateProduct productDto, IProductsService productsService) =>
 {
     if (productDto == null)
     {

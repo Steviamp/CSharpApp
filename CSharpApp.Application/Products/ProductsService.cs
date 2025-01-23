@@ -37,7 +37,7 @@ public class ProductsService : IProductsService
         return res;
     }
 
-    public async Task<Product> CreateProduct(Product productDto)
+    public async Task<Product> CreateProduct(CreateProduct productDto)
     {
         _httpClient.BaseAddress = new Uri(_restApiSettings.BaseUrl!);
         var jsonContent = new StringContent(JsonSerializer.Serialize(productDto), Encoding.UTF8, "application/json");
