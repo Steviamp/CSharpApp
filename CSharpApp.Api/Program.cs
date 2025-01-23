@@ -1,4 +1,6 @@
+using CSharpApp.Application.Categories;
 using CSharpApp.Core.Dtos;
+using CSharpApp.Core.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -53,6 +55,37 @@ versionedEndpointRouteBuilder.MapPost("api/v{version:apiVersion}/products", asyn
     return Results.Created($"api/v1/product/{createdProduct.Id}", createdProduct);
 })
 .WithName("CreateProduct")
+.HasApiVersion(1.0);
+
+
+versionedEndpointRouteBuilder.MapGet("api/v{version:apiVersion}/categories", async (ICategoriesService categoriesService) =>
+{
+    var categories = await categoriesService.GetCategories();
+    return categories;
+})
+    .WithName("GetCategories")
+.HasApiVersion(1.0);
+
+versionedEndpointRouteBuilder.MapGet("api/v{version:apiVersion}/categories/{id}", async (int id, ICategoriesService categoriesService) =>
+{
+    var category = await categoriesService.GetCategoryById(id);
+    return category != null ? Results.Ok(category) : Results.NotFound();
+})
+.WithName("GetCategoryById")
+.HasApiVersion(1.0);
+
+versionedEndpointRouteBuilder.MapPost("api/v{version:apiVersion}/categories", async (Category categoryDto, ICategoriesService categoriesService) =>
+{
+    if (categoryDto == null)
+    {
+        return Results.BadRequest("Product data is required.");
+    }
+
+    var createdCategory = await categoriesService.CreateCategory(categoryDto);
+
+    return Results.Created($"api/v1/categories/{createdCategory.Id}", createdCategory);
+})
+.WithName("CreateCategory")
 .HasApiVersion(1.0);
 
 app.Run();
