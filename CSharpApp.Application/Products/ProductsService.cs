@@ -8,11 +8,12 @@ public class ProductsService : IProductsService
     private readonly RestApiSettings _restApiSettings;
     private readonly ILogger<ProductsService> _logger;
 
-    public ProductsService(IOptions<RestApiSettings> restApiSettings, 
+    public ProductsService(
+        IPlatziApiClient apiClient,
         ILogger<ProductsService> logger)
     {
         _httpClient = new HttpClient();
-        _restApiSettings = restApiSettings.Value;
+        _restApiSettings = apiClient.Value;
         _logger = logger;
     }
 

@@ -1,6 +1,8 @@
+using Autofac.Core;
 using CSharpApp.Application.Categories;
 using CSharpApp.Core.Dtos;
 using CSharpApp.Core.Interfaces;
+using CSharpApp.Infrastructure.Clients;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,7 +13,7 @@ builder.Logging.ClearProviders().AddSerilog(logger);
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 builder.Services.AddDefaultConfiguration();
-builder.Services.AddHttpConfiguration();
+builder.Services.AddHttpConfiguration(builder.Configuration);
 builder.Services.AddProblemDetails();
 builder.Services.AddApiVersioning();
 
