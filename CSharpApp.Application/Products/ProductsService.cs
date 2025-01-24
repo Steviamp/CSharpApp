@@ -9,11 +9,11 @@ public class ProductsService : IProductsService
     private readonly ILogger<ProductsService> _logger;
 
     public ProductsService(
-        IPlatziApiClient apiClient,
+        RestApiSettings restApiSettings,
         ILogger<ProductsService> logger)
     {
         _httpClient = new HttpClient();
-        _restApiSettings = apiClient.Value;
+        _restApiSettings = restApiSettings;
         _logger = logger;
     }
 
