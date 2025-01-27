@@ -1,3 +1,5 @@
+using CSharpApp.Application.Products;
+using CSharpApp.Core.Interfaces;
 using System.Text;
 
 namespace CSharpApp.Application.Categories;
@@ -5,21 +7,22 @@ namespace CSharpApp.Application.Categories;
 public class CategoriesService : ICategoriesService
 {
     private readonly HttpClient _httpClient;
-    private readonly RestApiSettings _restApiSettings;
+    private readonly IPlatziApiClient _platziApiClient;
     private readonly ILogger<CategoriesService> _logger;
 
-    public CategoriesService(IOptions<RestApiSettings> restApiSettings, 
+    public CategoriesService(
+        IPlatziApiClient platziApiClient,
         ILogger<CategoriesService> logger)
     {
         _httpClient = new HttpClient();
-        _restApiSettings = restApiSettings.Value;
+        _platziApiClient = platziApiClient ?? throw new ArgumentNullException(nameof(platziApiClient));
         _logger = logger;
     }
 
     public async Task<IReadOnlyCollection<Category>> GetCategories()
     {
-        _httpClient.BaseAddress = new Uri(_restApiSettings.BaseUrl!);
-        var response = await _httpClient.GetAsync(_restApiSettings.Categories);
+        _httpClient.BaseAddress = new Uri(_platziApiClient.BaseUrl!);
+        var response = await _httpClient.GetAsync(_platziApiClient.Categories);
         response.EnsureSuccessStatusCode();
         var content = await response.Content.ReadAsStringAsync();
         var res = JsonSerializer.Deserialize<List<Category>>(content);
@@ -28,8 +31,8 @@ public class CategoriesService : ICategoriesService
     }
     public async Task<Category> GetCategoryById(int id)
     {
-        _httpClient.BaseAddress = new Uri(_restApiSettings.BaseUrl!);
-        var response = await _httpClient.GetAsync($"{_restApiSettings.Categories}/{id}");
+        _httpClient.BaseAddress = new Uri(_platziApiClient.BaseUrl!);
+        var response = await _httpClient.GetAsync($"{_platziApiClient.Categories}/{id}");
         response.EnsureSuccessStatusCode();
         var content = await response.Content.ReadAsStringAsync();
         var res = JsonSerializer.Deserialize<Category>(content);
@@ -39,9 +42,9 @@ public class CategoriesService : ICategoriesService
 
     public async Task<Category> CreateCategory(Category categoryDto)
     {
-        _httpClient.BaseAddress = new Uri(_restApiSettings.BaseUrl!);
+        _httpClient.BaseAddress = new Uri(_platziApiClient.BaseUrl!);
         var jsonContent = new StringContent(JsonSerializer.Serialize(categoryDto), Encoding.UTF8, "application/json");
-        var response = await _httpClient.PostAsync(_restApiSettings.Categories, jsonContent);
+        var response = await _httpClient.PostAsync(_platziApiClient.Categories, jsonContent);
         response.EnsureSuccessStatusCode();
         var content = await response.Content.ReadAsStringAsync();
         var res = JsonSerializer.Deserialize<Category>(content);
