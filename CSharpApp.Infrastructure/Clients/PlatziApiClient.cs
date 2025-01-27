@@ -6,11 +6,6 @@ using System.Text.Json.Serialization;
 
 namespace CSharpApp.Infrastructure.Clients
 {
-    public interface IPlatziApiClient
-    {
-        Task<string> GetDataAsync(string endpoint);
-    }
-
     public class PlatziApiClient : IPlatziApiClient
     {
         private readonly HttpClient _httpClient;
@@ -18,10 +13,13 @@ namespace CSharpApp.Infrastructure.Clients
         private string _token;
         private DateTime _tokenExpiration;
 
+        public string BaseUrl => _restApiSettings.BaseUrl!;
+        public string Products => _restApiSettings.Products!;
+
         public PlatziApiClient(HttpClient httpClient, RestApiSettings restApiSettings)
         {
             _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
-            _restApiSettings = restApiSettings;
+            _restApiSettings = restApiSettings ?? throw new ArgumentNullException(nameof(restApiSettings)); ;
         }
         public async Task<string> GetDataAsync(string endpoint)
         {
@@ -37,9 +35,9 @@ namespace CSharpApp.Infrastructure.Clients
 
         private async Task<string> GetTokenAsync()
         {
-            if (!string.IsNullOrEmpty(_token) && _tokenExpiration > DateTime.UtcNow) 
-            { 
-                return _token; 
+            if (!string.IsNullOrEmpty(_token) && _tokenExpiration > DateTime.UtcNow)
+            {
+                return _token;
             }
 
             var loginRequest = new
