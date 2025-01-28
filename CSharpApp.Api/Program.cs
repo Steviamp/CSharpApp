@@ -1,8 +1,5 @@
-using Autofac.Core;
-using CSharpApp.Application.Categories;
+using CSharpApp.Api.Middleware;
 using CSharpApp.Core.Dtos;
-using CSharpApp.Core.Interfaces;
-using CSharpApp.Infrastructure.Clients;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,7 +22,7 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-//app.UseHttpsRedirection();
+app.UseRequestPerformance();
 
 var versionedEndpointRouteBuilder = app.NewVersionedApi();
 
