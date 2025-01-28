@@ -9,6 +9,7 @@ public static class DefaultConfiguration
         var serviceProvider = services.BuildServiceProvider();
         var configuration = serviceProvider.GetService<IConfiguration>();
 
+        services.AddSingleton(configuration.GetSection(nameof(RestApiSettings)).Get<RestApiSettings>());
         services.Configure<RestApiSettings>(configuration!.GetSection(nameof(RestApiSettings)));
         services.Configure<HttpClientSettings>(configuration.GetSection(nameof(HttpClientSettings)));
 

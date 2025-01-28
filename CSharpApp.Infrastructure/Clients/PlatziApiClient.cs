@@ -15,6 +15,7 @@ namespace CSharpApp.Infrastructure.Clients
 
         public string BaseUrl => _restApiSettings.BaseUrl!;
         public string Products => _restApiSettings.Products!;
+        public string Categories => _restApiSettings.Categories!;
 
         public PlatziApiClient(HttpClient httpClient, RestApiSettings restApiSettings)
         {
